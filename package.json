@@ -5,6 +5,7 @@
   "author": "Faris Luthfan R <LRFaris24@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "graphql-yoga": "^1.18.1"
+    "apollo-server": "^2.7.0",
+    "graphql": "^14.4.2"
   }
 }

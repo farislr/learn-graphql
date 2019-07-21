@@ -1,18 +1,45 @@
-const { GraphQLServer } = require('graphql-yoga')
+const { ApolloServer, gql } = require('apollo-server')
 
-const typeDefs = `type Query {
-  info: String!
-}`
+const books = []
+const authors = []
+
+const typeDefs = gql`
+  type Book {
+    title: String
+    author: Author
+  }
+
+  type Author {
+    name: String
+    books: [Book]
+  }
+
+  type Query {
+    getBooks: [Book]
+    getAuthors: [Author]
+  }
+
+  type Mutation {
+    addBook(title: String, author: String): Book
+  }
+`
 
 const resolvers = {
   Query: {
-    info: () => `this is API of Learn-graphql`,
+    getBooks: () => books,
+    getAuthors: () => authors,
+  },
+  Mutation: {
+    addBook: (_, args) => {
+      books.push(args)
+      return books
+    },
   },
 }
 
-const server = new GraphQLServer({
+const server = new ApolloServer({
   typeDefs,
   resolvers,
 })
 
-server.start(() => console.log(`Server is running on http://localhost:4000`))
+server.listen().then(({ url }) => console.log(`Server ready at ${url}`))
