@@ -1,38 +1,61 @@
 const { ApolloServer, gql } = require('apollo-server')
+const { find } = require('lodash')
 
-const books = []
-const authors = []
+const books = [
+  {
+    id: 1,
+    title: 'title book',
+    author: 'test',
+  },
+]
+
+const authors = [
+  {
+    id: 1,
+    bookId: 1,
+    name: 'test',
+  },
+]
+
+let id = 1
 
 const typeDefs = gql`
   type Book {
+    id: ID!
     title: String
     author: Author
   }
 
   type Author {
+    id: ID!
+    bookId: ID!
     name: String
     books: [Book]
   }
 
   type Query {
-    getBooks: [Book]
-    getAuthors: [Author]
+    author: [Author]
+    book: [Book]
   }
 
   type Mutation {
-    addBook(title: String, author: String): Book
+    author(name: String): Author
   }
 `
 
 const resolvers = {
   Query: {
-    getBooks: () => books,
-    getAuthors: () => authors,
+    author: (parent, args) => {},
+    book: () => books,
   },
   Mutation: {
-    addBook: (_, args) => {
-      books.push(args)
-      return books
+    author: (parent, args) => {
+      const author = {
+        id: ++id,
+        name: args.name,
+      }
+      authors.push(author)
+      return author
     },
   },
 }
